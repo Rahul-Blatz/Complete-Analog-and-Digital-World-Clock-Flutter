@@ -104,17 +104,17 @@ class ClockPageState extends State<ClockPage> {
             TopRow(
               title: 'WORLD CLOCK',
               onPress: () async {
-                setState(() async {
-                  locationName = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return LocationList(
-                          selectedLocation: locationName,
-                        );
-                      },
-                    ),
-                  );
+                locationName = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LocationList(
+                        selectedLocation: locationName,
+                      );
+                    },
+                  ),
+                );
+                setState(() {
                   if (locationName == null) {
                     locationName = 'Europe/London';
                   }

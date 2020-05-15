@@ -17,11 +17,8 @@ class _LocationListState extends State<LocationList> {
         backgroundColor: Color(silver),
         body: Padding(
           padding: const EdgeInsets.only(top: 50.0),
-          child: Container(
-            color: Color(silver),
-            child: Center(
-              child: getListView(),
-            ),
+          child: Center(
+            child: getListView(),
           ),
         ),
       ),
