@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worldclock/constants/constants.dart';
 import 'package:worldclock/modules/clock_container.dart';
 import 'package:worldclock/modules/current_time_clock_hands.dart';
@@ -38,12 +39,29 @@ class ClockPageState extends State<ClockPage> {
 
   @override
   void initState() {
-    locationName = "Europe/London";
+    setInitialLocation();
+//    _getLocationFromSharedPref();
     Timer.periodic(
         Duration(seconds: 1),
         (Timer t) =>
             choice == Choice.CurrentTime ? _getTime() : getWorldTime());
     super.initState();
+  }
+
+  setInitialLocation() async {
+    locationName = await getLocationFromSharedPref();
+  }
+
+  Future<String> getLocationFromSharedPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastUsedLocation = prefs.getString('Location');
+
+    return lastUsedLocation ?? 'Europe/London';
+  }
+
+  Future<void> setLocationPref(String location) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('Location', location);
   }
 
   void _getTime() {
@@ -105,20 +123,17 @@ class ClockPageState extends State<ClockPage> {
               title: 'WORLD CLOCK',
               onPress: () async {
                 locationName = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LocationList(
-                        selectedLocation: locationName,
-                      );
-                    },
-                  ),
-                );
-                setState(() {
-                  if (locationName == null) {
-                    locationName = 'Europe/London';
-                  }
-                });
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return LocationList(
+                            selectedLocation: locationName,
+                          );
+                        },
+                      ),
+                    ) ??
+                    'Europe/London';
+                setLocationPref(locationName);
               },
             ),
             Center(

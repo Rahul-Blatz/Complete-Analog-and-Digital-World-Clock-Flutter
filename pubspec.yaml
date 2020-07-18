@@ -24,6 +24,7 @@ dependencies:
   intl: ^0.16.1
   data_connection_checker: ^0.3.4
   http: ^0.12.0+4
+  shared_preferences: ^0.5.8
   flutter:
     sdk: flutter
 
